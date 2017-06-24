@@ -7,7 +7,7 @@ function clearBox(elementID)
 
 function getPosts()
 {
-	var mainuserData
+	var mainuserData;
 	var usersRequest = new XMLHttpRequest();
 	usersRequest.open('GET', 'https://jsonplaceholder.typicode.com/users');
 	usersRequest.onload = function(){
@@ -39,11 +39,19 @@ postButton.addEventListener("click",getPosts);
 
 //to check if button has been clicked
 var postnum = 0;
-function renderpostHTML(data, userData){
+var currentpostnum;
+var postCeiling;
+var postData;
+var postuserData;
+var morepostButton;
+function renderpostHTML(data, userData)
+{
 	var htmlString = "";
 	postnum+= 1;
-	
-	for(i = data.length-1; i >= 0; i--) {
+	postData = data;
+	postuserData = userData;
+	var totalposts = data.length-1
+	for(i = totalposts; i >= totalposts-10; i--) {
 		var userid;
 		for(y = 0; y < userData.length; y++){
 			if(data[i].userId == userData[y].id)
@@ -52,13 +60,49 @@ function renderpostHTML(data, userData){
 			}
 			
 			htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+num+'"'+ " onclick="+ '"'+"userfunc("+num+")"+'"'+ ">" + userData[userid].name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + data[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + data[i].body+"</p></div><br>";
-		
-		//if((i+1) % 6 == 0 && i != 0)
-		//	htmlString += "<br>";
+		currentpostnum = i;
+		postCeiling = totalposts-10;
 	}
+	
+	htmlString += "<div id="+'"'+"postButton"+'"'+"><p>I want more posts</p></div><br>";
+	
 	if(postnum == 1)
 		divHTML.insertAdjacentHTML('beforeend', htmlString);
-	//userButton.remove();
+	
+	morepostButton = document.getElementById("postButton");
+	if(morepostButton){
+		morepostButton.addEventListener("click", morePosts);
+	}
+}
+
+function morePosts() 
+{	var htmlString = "";
+	totalposts = postData.length;
+	postCeiling -= 10;
+	for(i = currentpostnum; i >= postCeiling; i--) {
+		var userid;
+		if(i != -1){
+			for(y = 0; y < postuserData.length; y++){
+				if(postData[i].userId == postuserData[y].id)
+					userid = y;
+				var num = userid +1;
+				}		
+				htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+num+'"'+ " onclick="+ '"'+"userfunc("+num+")"+'"'+ ">" + postuserData[userid].name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + postData[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + postData[i].body+"</p></div><br>";
+			currentpostnum = i;
+		}
+		
+	}
+	htmlString += "<div id="+'"'+"postButton"+'"'+"><p>I want more posts</p></div><br>";
+	morepostButton.remove();
+	divHTML.insertAdjacentHTML('beforeend', htmlString);
+
+	morepostButton = document.getElementById("postButton");
+	if(morepostButton){
+		morepostButton.addEventListener("click", morePosts);
+	}
+	if(postCeiling == -1){
+		morepostButton.remove();
+	}
 }
 
 var photoButton = document.getElementById("photo");

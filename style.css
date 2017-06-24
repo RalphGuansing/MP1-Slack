@@ -84,6 +84,26 @@ p.postBody {
 	
 }
 
+#postButton  {
+	background-color: #357AE8;
+	width: 40%;
+	margin:0 auto;	
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+#postButton p{
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+	color:white;
+	padding:40px;
+	
+}
+#postButton:hover{
+	background-color: #357FFF;
+}
+
 div header{
 	display: flex;
 	padding: 10px;
