@@ -253,11 +253,41 @@ function renderusersHTML(data){
 	//userButton.remove();
 }
 
+//ETO DINAGDAG KO RALPH
 function userfunc(num) {
     var x = document.getElementById("userbutt"+num);
-    alert(x.innerHTML);  
+	var i = num;
+    //alert(x.innerHTML);  
+	
+	x.addEventListener("click", function(){
+		clearBox("centerdiv");
+		var ourRequest = new XMLHttpRequest();
+		ourRequest.open('GET', 'https://jsonplaceholder.typicode.com/users');
+		
+		ourRequest.onload = function(){
+		
+
+			
+			var userData = JSON.parse(ourRequest.responseText);
+			renderProfile(userData,i);
+			
+		};
+		
+		ourRequest.send();
+	});
 }
 
+function renderProfile(data,i){
+	var htmlString = "";
+
+	var index = i-1;
+	htmlString += "<p><h4>PROFILE PAGE: </h4><a>Name: " + data[index].name +"<br>ID: "+ data[index].id +"<br>Username: "+ data[index].username +"<br>Street: "+data[index].address.street +"<br>Suite: "+data[index].address.suite +"<br>City: "+data[index].address.city +"<br>Zipcode: "+data[index].address.zipcode +"<br>"+ "</a></p><br>";
+	
+	divHTML.insertAdjacentHTML('beforeend', htmlString);
+	//userButton.remove();
+}
+
+// HANGGANG DITO
 
 
 
