@@ -1,4 +1,5 @@
 var divHTML = document.getElementById("centerdiv");
+var imgdivHTML = document.getElementById("imgdiv");
 
 var albumnum = 0;
 var photoData;
@@ -44,7 +45,7 @@ function albumfunc(num){
 		}
 			
 	}
-		
+	
 	albumdivHTML.insertAdjacentHTML('beforeend', htmlString);
 }
 
@@ -93,7 +94,7 @@ function renderalbumHTML(photoData, albumData)
 	
 	var htmlString = "";
 	albumnum += 1;
-	for(i = 0; i < 15; i++) {
+	for(i = 0; i < albumData.length; i++) {
 		var albumID;
 		/*for(y = 0; y < photoData.length; y++){
 			if(albumData[i].id == photoData[y].albumId)
@@ -104,13 +105,16 @@ function renderalbumHTML(photoData, albumData)
 		
 		//if((i+1)%6 == 0)
 		//	htmlString += "<br>"
+		if((i+1)%5 == 0)
+			htmlString += "<br>"
 	}
-	if(albumnum == 1)
-		divHTML.insertAdjacentHTML('beforeend', htmlString);
+	if(albumnum == 1){
+		imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
 	
-	for(ii = 0; ii < 15; ii++) {
-		var num = ii+1;
-		albumfunc(num);
+		for(ii = 0; ii < 15; ii++) {
+			var num = ii+1;
+			albumfunc(num);
+		}
 	}
 	
 }
@@ -121,6 +125,7 @@ albumButton.addEventListener("click",getAlbums);
 function clearBox(elementID)
 {
     document.getElementById(elementID).innerHTML = "";
+	document.getElementById("imgdiv").innerHTML = "";
 }
 
 function getPosts()
@@ -252,11 +257,11 @@ function renderphotoHTML(data){
 		//<img src="url" alt="some_text" style="width:width;height:height;">
 		htmlString += "<img class="+'"'+"resize"+'"'+" src=" +'"'+ data[i].url +'"'+ "alt="+'"'+data[i].albumId+'"'+"/>";
 		
-		if((i+1) % 6 == 0 && i != 0)
+		if((i+1) % 5 == 0 && i != 0)
 			htmlString += "<br>";
 	}
 	if(photonum == 1)
-		divHTML.insertAdjacentHTML('beforeend', htmlString);
+		imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
 	//userButton.remove();
 }
 
@@ -301,6 +306,10 @@ function userfunc(num) {
 	
 	x.addEventListener("click", function(){
 		clearBox("centerdiv");
+		usernum = 0;
+		postnum = 0;
+		photonum = 0;
+		albumnum = 0;
 		var ourRequest = new XMLHttpRequest();
 		ourRequest.open('GET', 'https://jsonplaceholder.typicode.com/users');
 		
@@ -321,7 +330,10 @@ function renderProfile(data,i){
 	var htmlString = "";
 
 	var index = i-1;
-	htmlString += "<p><h4>PROFILE PAGE: </h4><a>Name: " + data[index].name +"<br>ID: "+ data[index].id +"<br>Username: "+ data[index].username +"<br>Street: "+data[index].address.street +"<br>Suite: "+data[index].address.suite +"<br>City: "+data[index].address.city +"<br>Zipcode: "+data[index].address.zipcode +"<br>"+ "</a></p><br>";
+	/*htmlString += "<p><a>Name: " + data[index].name +"<br>ID: "+ data[index].id +"<br>Username: "+ data[index].username +"<br>Street: "+data[index].address.street +"<br>Suite: "+data[index].address.suite +"<br>City: "+data[index].address.city +"<br>Zipcode: "+data[index].address.zipcode +"<br>"+ "</a></p><br>";*/
+	
+	htmlString += "<div id="+'"'+"profileInfo"+'"'+">"+"<h1>" + data[index].name +"</h1>"+data[index].username+"<p><a>ID: "+ data[index].id +"<br>Street: "+data[index].address.street +"<br>Suite: "+data[index].address.suite +"<br>City: "+data[index].address.city +"<br>Zipcode: "+data[index].address.zipcode +"<br>"+ "</a></p></div>";
+	
 	
 	divHTML.insertAdjacentHTML('beforeend', htmlString);
 	//userButton.remove();
