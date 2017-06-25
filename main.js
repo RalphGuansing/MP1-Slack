@@ -43,7 +43,7 @@ function albumfunc(num){
 		}
 			
 	}
-		
+	
 	albumdivHTML.insertAdjacentHTML('beforeend', htmlString);
 }
 
@@ -67,12 +67,13 @@ function renderalbumHTML(photoData, albumData)
 		if((i+1)%5 == 0)
 			htmlString += "<br>"
 	}
-	if(albumnum == 1)
+	if(albumnum == 1){
 		imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
 	
-	for(ii = 0; ii < 15; ii++) {
-		var num = ii+1;
-		albumfunc(num);
+		for(ii = 0; ii < 15; ii++) {
+			var num = ii+1;
+			albumfunc(num);
+		}
 	}
 	
 }
