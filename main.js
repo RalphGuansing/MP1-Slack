@@ -54,9 +54,9 @@ function albumClickfunc(num){
 	
 	var x = document.getElementById("album"+num);
 	
-	var i = num;
+	var ii = num;
 	
-	console.log(i);
+	console.log(ii);
     //alert(x.innerHTML);  
 	
 	x.addEventListener("click", function(){
@@ -67,7 +67,7 @@ function albumClickfunc(num){
 		photosRequest.onload = function(){
 
 			var photosData = JSON.parse(photosRequest.responseText);
-			renderAlbumPhotos(photosData,i);
+			renderAlbumPhotos(photosData,ii);
 			
 		};
 		
@@ -78,14 +78,31 @@ function albumClickfunc(num){
 function renderAlbumPhotos(photosData,x){
 	var htmlString="";
 
-	
+	/*
 	for(i = 0; i < photosData.length; i++){
 		
 		if(x == photosData[i].albumId)
 			htmlString+="<img class="+'"'+"resize"+'"'+" src=" +'"'+ photosData[i].url +'"'+ "alt="+'"'+photosData[i].albumId+'"'+"/><p>PHOTO TITLE: "+photosData[i].title+"</p><p>PHOTO ALBUM #"+photosData[i].albumId+"</p>";	
 	}
 	
-	divHTML.insertAdjacentHTML('beforeend',htmlString)
+	divHTML.insertAdjacentHTML('beforeend',htmlString)*/
+	
+	for(i = 0; i < photosData.length; i++) {
+		//<img src="url" alt="some_text" style="width:width;height:height;">
+		if(x == photosData[i].albumId){
+			htmlString += "<div class="+'"'+"content-wrapper"+'"'+">";
+			htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+photosData[i].url+'"'+ ">";
+			htmlString += "<a class="+ '"'+"phototext"+'"'+">"+photosData[i].title+"</a></div>";
+		}
+		
+		
+			/*htmlString += "<img class="+'"'+"resize"+'"'+" src=" +'"'+ photosData[i].url +'"'+ "alt="+'"'+photosData[i].albumId+'"'+"><div class="+'"'+"phototext"+'"'+">"+photosData[i].title+"</div></img>";*/
+		//<h3 class="+'"'+"phototext"+'"'+">"+photosData[i].title+"</h3>
+		
+		if((i+1) % 5 == 0 && i != 0 && x == photosData[i].albumId)
+			htmlString += "<br>";
+	}
+		imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
 	
 }
 
@@ -94,7 +111,7 @@ function renderalbumHTML(photoData, albumData)
 	
 	var htmlString = "";
 	albumnum += 1;
-	for(i = 0; i < albumData.length; i++) {
+	for(i = 0; i < 15; i++) {
 		var albumID;
 		/*for(y = 0; y < photoData.length; y++){
 			if(albumData[i].id == photoData[y].albumId)
@@ -241,8 +258,8 @@ photoButton.addEventListener("click", function() {
 		postnum = 0;
 		albumnum = 0;
 		
-		var userData = JSON.parse(ourRequest.responseText);
-		renderphotoHTML(userData);
+		photoData = JSON.parse(ourRequest.responseText);
+		renderphotoHTML(photoData);
 		
 	};
 	ourRequest.send();
@@ -250,19 +267,72 @@ photoButton.addEventListener("click", function() {
 
 //to check if button has been clicked
 var photonum = 0;
+var totalphotos;
+var endnum;
+var currentphotonum;
+var morephotoButton
 function renderphotoHTML(data){
 	var htmlString = "";
 	photonum+= 1;
-	for(i = 0; i < 15; i++) {
+	totalphotos = data.length-1;
+	endnum = totalphotos - 15;
+	for(i = totalphotos; i > endnum; i--) {
 		//<img src="url" alt="some_text" style="width:width;height:height;">
-		htmlString += "<img class="+'"'+"resize"+'"'+" src=" +'"'+ data[i].url +'"'+ "alt="+'"'+data[i].albumId+'"'+"/>";
+		//htmlString += "<img class="+'"'+"resize"+'"'+" src=" +'"'+ data[i].url +'"'+ "alt="+'"'+data[i].albumId+'"'+"/>";
 		
-		if((i+1) % 5 == 0 && i != 0)
+		htmlString += "<div class="+'"'+"content-wrapper"+'"'+">";
+		htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+data[i].url+'"'+ ">";
+		htmlString += "<a class="+ '"'+"phototext"+'"'+">"+data[i].title+"</a></div>";
+		
+		if((i) % 5 == 0)
 			htmlString += "<br>";
+	
+		currentphotonum = i;
 	}
+	
+	htmlString += "<br><br><div id="+'"'+"photoButton"+'"'+"><p>I want more photos</p></div><br>";
+	
+	
 	if(photonum == 1)
 		imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
-	//userButton.remove();
+	
+	morephotoButton = document.getElementById("photoButton");
+	if(morephotoButton){
+		morephotoButton.addEventListener("click", morePhotos);
+	}
+}
+
+function morePhotos(){
+	var htmlString ="";
+	endnum -= 15;
+	currentphotonum -=1;
+	for(i = currentphotonum; i > endnum; i--) {
+		//<img src="url" alt="some_text" style="width:width;height:height;">
+		//htmlString += "<img class="+'"'+"resize"+'"'+" src=" +'"'+ photoData[i].url +'"'+ "alt="+'"'+photoData[i].id+'"'+"/>";
+		
+		htmlString += "<div class="+'"'+"content-wrapper"+'"'+">";
+		htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+photoData[i].url+'"'+ ">";
+		htmlString += "<a class="+ '"'+"phototext"+'"'+">"+photoData[i].title+"</a></div>";
+		
+		
+		if((i) % 5 == 0 && i != 0)
+			htmlString += "<br>";
+	}
+	currentphotonum -= 14;
+	
+	
+	htmlString += "<br><br><div id="+'"'+"photoButton"+'"'+"><p>I want more photos</p></div><br>";
+	
+	morephotoButton.remove();
+	imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
+
+	morephotoButton = document.getElementById("photoButton");
+	if(morephotoButton){
+		morephotoButton.addEventListener("click", morePhotos);
+	}
+	if(endnum < 0){
+		morephotoButton.remove();
+	}
 }
 
 

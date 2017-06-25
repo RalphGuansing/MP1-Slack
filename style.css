@@ -94,7 +94,7 @@ p.postBody {
 	
 }
 
-#postButton  {
+#postButton,#photoButton  {
 	background-color: #357AE8;
 	width: 40%;
 	margin:0 auto;	
@@ -102,7 +102,7 @@ p.postBody {
 	cursor: pointer;
 }
 
-#postButton p{
+#postButton p,#photoButton p{
 	text-align: center;
 	vertical-align: middle;
 	font-weight: bold;
@@ -110,7 +110,7 @@ p.postBody {
 	padding:40px;
 	
 }
-#postButton:hover{
+#postButton:hover, #photoButton:hover{
 	background-color: #357FFF;
 }
 
@@ -136,5 +136,24 @@ img.albumTN{
 
 #profileInfo {
 	padding-left: 100px;
+	
+}
+.phototext{
+	position: relative; 
+	display: flex;
+	
+	
+}
+
+.content-wrapper {
+	height:200px;
+	width: 200px;
+	display: flex;
+	background-color: white;
+	display: inline-block;
+	padding:20px;
+	padding-top: 50px;
+	text-align: center;
+
 }
 
