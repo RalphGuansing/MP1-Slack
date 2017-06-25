@@ -49,6 +49,7 @@ function albumfunc(num){
 	albumdivHTML.insertAdjacentHTML('beforeend', htmlString);
 }
 
+// ETO DINAGDAG KO FROM HERE
 function albumClickfunc(num){
 	//alert("album number " + num);
 	
@@ -88,6 +89,7 @@ function renderAlbumPhotos(photosData,x){
 	divHTML.insertAdjacentHTML('beforeend',htmlString)
 	
 }
+//UP TO HERE
 
 function renderalbumHTML(photoData, albumData)
 {
