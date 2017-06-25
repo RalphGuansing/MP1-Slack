@@ -112,3 +112,15 @@ div header{
 
 }
 
+.album {
+	height:200px;
+	width: 200px;
+	background-color: white;
+	display: inline-block;
+	padding:20px;
+}
+img.albumTN{
+	width:50px;
+	height:50px;
+}
+

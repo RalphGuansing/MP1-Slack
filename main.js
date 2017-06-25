@@ -1,5 +1,84 @@
 var divHTML = document.getElementById("centerdiv");
 
+var albumnum = 0;
+var photoData;
+function getAlbums()
+{
+	var albumData;
+	var albumRequest = new XMLHttpRequest();
+	albumRequest.open('GET', 'https://jsonplaceholder.typicode.com/albums');
+	albumRequest.onload = function(){
+
+		albumData = JSON.parse(albumRequest.responseText);
+	};
+	albumRequest.send();
+	
+	var photoRequest = new XMLHttpRequest();
+	photoRequest.open('GET', 'https://jsonplaceholder.typicode.com/photos');
+	photoRequest.onload = function(){
+		//for better navigation
+		if(albumnum == 0)
+			clearBox("centerdiv");
+		usernum = 0;
+		photonum = 0;
+		postnum = 0;
+		
+		photoData = JSON.parse(photoRequest.responseText);
+		renderalbumHTML(photoData, albumData);
+		
+	};
+	photoRequest.send();
+}
+function albumfunc(num){
+	//alert("HELLO" + num);
+	var htmlString = "";
+	var albumdivHTML = document.getElementById("album"+num);
+	var photocount=0;
+	for(i = 0; i < photoData.length; i++){
+		
+		if(num == photoData[i].albumId && photocount != 16){
+			htmlString += "<img class="+'"'+"albumTN"+'"'+" src=" +'"'+ photoData[i].url +'"'+ "alt="+'"'+photoData[i].albumId+'"'+"/>";
+			photocount++;
+		}
+			
+	}
+		
+	albumdivHTML.insertAdjacentHTML('beforeend', htmlString);
+}
+
+function albumClickfunc(num){
+	alert("album number " + num);
+}
+
+function renderalbumHTML(photoData, albumData)
+{
+	var htmlString = "";
+	albumnum += 1;
+	for(i = 0; i < 15; i++) {
+		var albumID;
+		/*for(y = 0; y < photoData.length; y++){
+			if(albumData[i].id == photoData[y].albumId)
+			albumID = y;}*/
+		var num = albumID + 1;
+			
+		htmlString += "<div class="+'"'+"album"+'"'+" id="+'"album'+albumData[i].id+'"'+" onclick="+ '"'+"albumClickfunc("+albumData[i].id+")"+'"'+"></div>";
+		
+		if((i+1)%6 == 0)
+			htmlString += "<br>"
+	}
+	if(albumnum == 1)
+		divHTML.insertAdjacentHTML('beforeend', htmlString);
+	
+	for(ii = 0; ii < 15; ii++) {
+		var num = ii+1;
+		albumfunc(num);
+	}
+	
+}
+
+var albumButton = document.getElementById("album");
+albumButton.addEventListener("click",getAlbums);
+
 function clearBox(elementID)
 {
     document.getElementById(elementID).innerHTML = "";
@@ -115,6 +194,7 @@ photoButton.addEventListener("click", function() {
 			clearBox("centerdiv");
 		usernum = 0;
 		postnum = 0;
+		albumnum = 0;
 		
 		var userData = JSON.parse(ourRequest.responseText);
 		renderphotoHTML(userData);
@@ -151,6 +231,7 @@ userButton.addEventListener("click", function() {
 			clearBox("centerdiv");
 		photonum = 0;
 		postnum = 0;
+		albumnum = 0;
 		
 		var userData = JSON.parse(ourRequest.responseText);
 		renderusersHTML(userData);
