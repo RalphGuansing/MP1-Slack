@@ -261,6 +261,10 @@ function userfunc(num) {
 	
 	x.addEventListener("click", function(){
 		clearBox("centerdiv");
+		usernum = 0;
+		postnum = 0;
+		photonum = 0;
+		albumnum = 0;
 		var ourRequest = new XMLHttpRequest();
 		ourRequest.open('GET', 'https://jsonplaceholder.typicode.com/users');
 		
