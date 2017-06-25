@@ -4,6 +4,7 @@ var albumnum = 0;
 var photoData;
 function getAlbums()
 {
+	
 	var albumData;
 	var albumRequest = new XMLHttpRequest();
 	albumRequest.open('GET', 'https://jsonplaceholder.typicode.com/albums');
@@ -15,6 +16,7 @@ function getAlbums()
 	
 	var photoRequest = new XMLHttpRequest();
 	photoRequest.open('GET', 'https://jsonplaceholder.typicode.com/photos');
+	clearBox("centerdiv")
 	photoRequest.onload = function(){
 		//for better navigation
 		if(albumnum == 0)
@@ -47,11 +49,48 @@ function albumfunc(num){
 }
 
 function albumClickfunc(num){
-	alert("album number " + num);
+	//alert("album number " + num);
+	
+	var x = document.getElementById("album"+num);
+	
+	var i = num;
+	
+	console.log(i);
+    //alert(x.innerHTML);  
+	
+	x.addEventListener("click", function(){
+		clearBox("centerdiv");
+		var photosRequest = new XMLHttpRequest();
+		photosRequest.open('GET', 'https://jsonplaceholder.typicode.com/photos');
+		
+		photosRequest.onload = function(){
+
+			var photosData = JSON.parse(photosRequest.responseText);
+			renderAlbumPhotos(photosData,i);
+			
+		};
+		
+		photosRequest.send();
+	});
+}
+
+function renderAlbumPhotos(photosData,x){
+	var htmlString="";
+
+	
+	for(i = 0; i < photosData.length; i++){
+		
+		if(x == photosData[i].albumId)
+			htmlString+="<img class="+'"'+"resize"+'"'+" src=" +'"'+ photosData[i].url +'"'+ "alt="+'"'+photosData[i].albumId+'"'+"/><p>PHOTO TITLE: "+photosData[i].title+"</p><p>PHOTO ALBUM #"+photosData[i].albumId+"</p>";	
+	}
+	
+	divHTML.insertAdjacentHTML('beforeend',htmlString)
+	
 }
 
 function renderalbumHTML(photoData, albumData)
 {
+	
 	var htmlString = "";
 	albumnum += 1;
 	for(i = 0; i < 15; i++) {
@@ -63,8 +102,8 @@ function renderalbumHTML(photoData, albumData)
 			
 		htmlString += "<div class="+'"'+"album"+'"'+" id="+'"album'+albumData[i].id+'"'+" onclick="+ '"'+"albumClickfunc("+albumData[i].id+")"+'"'+"></div>";
 		
-		if((i+1)%6 == 0)
-			htmlString += "<br>"
+		//if((i+1)%6 == 0)
+		//	htmlString += "<br>"
 	}
 	if(albumnum == 1)
 		divHTML.insertAdjacentHTML('beforeend', htmlString);
@@ -103,6 +142,7 @@ function getPosts()
 			clearBox("centerdiv");
 		usernum = 0;
 		photonum = 0;
+		albumnum= 0;
 		
 		var userData = JSON.parse(ourRequest.responseText);
 		renderpostHTML(userData, mainuserData);
