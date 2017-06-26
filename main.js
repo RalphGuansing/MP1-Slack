@@ -1,6 +1,5 @@
 var divHTML = document.getElementById("centerdiv");
 var imgdivHTML = document.getElementById("imgdiv");
-
 var albumnum = 0;
 var photoData;
 function getAlbums()
@@ -33,7 +32,6 @@ function getAlbums()
 	photoRequest.send();
 }
 function albumfunc(num){
-	//alert("HELLO" + num);
 	var htmlString = "";
 	var albumdivHTML = document.getElementById("album"+num);
 	var photocount=0;
@@ -49,18 +47,12 @@ function albumfunc(num){
 	albumdivHTML.insertAdjacentHTML('beforeend', htmlString);
 }
 
-// ETO DINAGDAG KO FROM HERE
+
 function albumClickfunc(num){
-	//alert("album number " + num);
-	
-	var x = document.getElementById("album"+num);
-	
+	//var x = document.getElementById("album"+num);
 	var ii = num;
-	
-	console.log(ii);
-    //alert(x.innerHTML);  
-	
-	x.addEventListener("click", function(){
+	//console.log(ii); 
+	//x.addEventListener("click", function(){
 		clearBox("centerdiv");
 		var photosRequest = new XMLHttpRequest();
 		photosRequest.open('GET', 'https://jsonplaceholder.typicode.com/photos');
@@ -73,32 +65,20 @@ function albumClickfunc(num){
 		};
 		
 		photosRequest.send();
-	});
+	//});
 }
 
 function renderAlbumPhotos(photosData,x){
 	var htmlString="";
-
-	/*
-	for(i = 0; i < photosData.length; i++){
-		
-		if(x == photosData[i].albumId)
-			htmlString+="<img class="+'"'+"resize"+'"'+" src=" +'"'+ photosData[i].url +'"'+ "alt="+'"'+photosData[i].albumId+'"'+"/><p>PHOTO TITLE: "+photosData[i].title+"</p><p>PHOTO ALBUM #"+photosData[i].albumId+"</p>";	
-	}
-	
-	divHTML.insertAdjacentHTML('beforeend',htmlString)*/
+	albumnum = 0;
 	
 	for(i = 0; i < photosData.length; i++) {
-		//<img src="url" alt="some_text" style="width:width;height:height;">
 		if(x == photosData[i].albumId){
-			htmlString += "<div class="+'"'+"content-wrapper"+'"'+">";
+			htmlString += "<div class="+'"'+"content-wrapper"+'"';
+			htmlString += " onclick="+ '"'+"photoClick("+photosData[i].id+")"+'"'+">";
 			htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+photosData[i].url+'"'+ ">";
 			htmlString += "<a class="+ '"'+"phototext"+'"'+">"+photosData[i].title+"</a></div>";
 		}
-		
-		
-			/*htmlString += "<img class="+'"'+"resize"+'"'+" src=" +'"'+ photosData[i].url +'"'+ "alt="+'"'+photosData[i].albumId+'"'+"><div class="+'"'+"phototext"+'"'+">"+photosData[i].title+"</div></img>";*/
-		//<h3 class="+'"'+"phototext"+'"'+">"+photosData[i].title+"</h3>
 		
 		if((i+1) % 5 == 0 && i != 0 && x == photosData[i].albumId)
 			htmlString += "<br>";
@@ -106,7 +86,7 @@ function renderAlbumPhotos(photosData,x){
 		imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
 	
 }
-//UP TO HERE
+
 
 function renderalbumHTML(photoData, albumData)
 {
@@ -115,9 +95,6 @@ function renderalbumHTML(photoData, albumData)
 	albumnum += 1;
 	for(i = 0; i < 15; i++) {
 		var albumID;
-		/*for(y = 0; y < photoData.length; y++){
-			if(albumData[i].id == photoData[y].albumId)
-			albumID = y;}*/
 		var num = albumID + 1;
 			
 		htmlString += "<div class="+'"'+"album"+'"'+" id="+'"album'+albumData[i].id+'"'+" onclick="+ '"'+"albumClickfunc("+albumData[i].id+")"+'"'+"></div>";
@@ -200,10 +177,10 @@ function renderpostHTML(data, userData)
 			if(data[i].userId == userData[y].id)
 				userid = y;
 			var num = userid +1;
-			}
+		}
 			
-			htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+num+'"'+ " onclick="+ '"'+"userfunc("+num+")"+'"'+ ">" + userData[userid].name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + data[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + data[i].body+"</p></div><br>";
-		currentpostnum = i;
+		htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+num+'"'+ " onclick="+ '"'+"userfunc("+num+")"+'"'+ ">" + userData[userid].name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + data[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + data[i].body+"</p></div><br>";
+		currentpostnum = i-1;
 		postCeiling = totalposts-10;
 	}
 	
@@ -231,7 +208,7 @@ function morePosts()
 				var num = userid +1;
 				}		
 				htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+num+'"'+ " onclick="+ '"'+"userfunc("+num+")"+'"'+ ">" + postuserData[userid].name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + postData[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + postData[i].body+"</p></div><br>";
-			currentpostnum = i;
+			currentpostnum = i-1;
 		}
 		
 	}
@@ -278,13 +255,12 @@ function renderphotoHTML(data){
 	photonum+= 1;
 	totalphotos = data.length-1;
 	endnum = totalphotos - 15;
-	for(i = totalphotos; i > endnum; i--) {
-		//<img src="url" alt="some_text" style="width:width;height:height;">
-		//htmlString += "<img class="+'"'+"resize"+'"'+" src=" +'"'+ data[i].url +'"'+ "alt="+'"'+data[i].albumId+'"'+"/>";
-		
-		htmlString += "<div class="+'"'+"content-wrapper"+'"'+">";
+	for(i = totalphotos; i > endnum; i--) {	
+		htmlString += "<div class="+'"'+"content-wrapper"+'"';
+		htmlString += " onclick="+ '"'+"photoClick("+data[i].id+")"+'"'+">";
 		htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+data[i].url+'"'+ ">";
 		htmlString += "<a class="+ '"'+"phototext"+'"'+">"+data[i].title+"</a></div>";
+		
 		
 		if((i) % 5 == 0)
 			htmlString += "<br>";
@@ -308,11 +284,9 @@ function morePhotos(){
 	var htmlString ="";
 	endnum -= 15;
 	currentphotonum -=1;
-	for(i = currentphotonum; i > endnum; i--) {
-		//<img src="url" alt="some_text" style="width:width;height:height;">
-		//htmlString += "<img class="+'"'+"resize"+'"'+" src=" +'"'+ photoData[i].url +'"'+ "alt="+'"'+photoData[i].id+'"'+"/>";
-		
-		htmlString += "<div class="+'"'+"content-wrapper"+'"'+">";
+	for(i = currentphotonum; i > endnum; i--) {	
+		htmlString += "<div class="+'"'+"content-wrapper"+'"';
+		htmlString += " onclick="+ '"'+"photoClick("+photoData[i].id+")"+'"'+">";
 		htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+photoData[i].url+'"'+ ">";
 		htmlString += "<a class="+ '"'+"phototext"+'"'+">"+photoData[i].title+"</a></div>";
 		
@@ -335,6 +309,11 @@ function morePhotos(){
 	if(endnum < 0){
 		morephotoButton.remove();
 	}
+}
+
+function photoClick(id){
+	photonum = 0;
+	clearBox("centerdiv");
 }
 
 
@@ -367,16 +346,13 @@ function renderusersHTML(data){
 	}
 	if(usernum == 1)
 		divHTML.insertAdjacentHTML('beforeend', htmlString);
-	//userButton.remove();
 }
 
-//ETO DINAGDAG KO RALPH
 function userfunc(num) {
-    var x = document.getElementById("userbutt"+num);
+    //var x = document.getElementById("userbutt"+num);
 	var i = num;
-    //alert(x.innerHTML);  
 	
-	x.addEventListener("click", function(){
+	//x.addEventListener("click", function(){
 		clearBox("centerdiv");
 		usernum = 0;
 		postnum = 0;
@@ -395,29 +371,13 @@ function userfunc(num) {
 		};
 		
 		ourRequest.send();
-	});
+	//});
 }
 
 function renderProfile(data,i){
 	var htmlString = "";
-
 	var index = i-1;
-	/*htmlString += "<p><a>Name: " + data[index].name +"<br>ID: "+ data[index].id +"<br>Username: "+ data[index].username +"<br>Street: "+data[index].address.street +"<br>Suite: "+data[index].address.suite +"<br>City: "+data[index].address.city +"<br>Zipcode: "+data[index].address.zipcode +"<br>"+ "</a></p><br>";*/
-	
 	htmlString += "<div id="+'"'+"profileInfo"+'"'+">"+"<h1>" + data[index].name +"</h1>"+data[index].username+"<p><a>ID: "+ data[index].id +"<br>Street: "+data[index].address.street +"<br>Suite: "+data[index].address.suite +"<br>City: "+data[index].address.city +"<br>Zipcode: "+data[index].address.zipcode +"<br>"+ "</a></p></div>";
 	
-	
 	divHTML.insertAdjacentHTML('beforeend', htmlString);
-	//userButton.remove();
 }
-
-// HANGGANG DITO
-
-
-
-
-
-
-
-
-
