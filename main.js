@@ -503,10 +503,40 @@ function userfunc(num) {
 	//});
 }
 
+var lat;
+var lng;
+var script;
 function renderProfile(data,i){
 	var htmlString = "";
 	var index = i-1;
 	htmlString += "<div id="+'"'+"profileInfo"+'"'+">"+"<h1>" + data[index].name +"</h1>"+data[index].username+"<p><a>ID: "+ data[index].id +"<br>Street: "+data[index].address.street +"<br>Suite: "+data[index].address.suite +"<br>City: "+data[index].address.city +"<br>Zipcode: "+data[index].address.zipcode +"<br>"+ "</a></p></div>";
+	htmlString += "<div id="+'"'+"googleMap"+'"'+"style="+'"'+"width:400px;height:400px;"+'"'+"></div>";
 	
 	divHTML.insertAdjacentHTML('beforeend', htmlString);
+	
+	lat = data[index].address.geo.lat;
+	lng = data[index].address.geo.lng;
+	//alert("lat: "+lat+"  lng: "+lng)
+	
+		script = document.createElement("script");
+		script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyApcfxWkE3UtK7Wb5vAFTTtbk19zxWlutw&callback=myMap"; 
+		document.getElementsByTagName("head")[0].appendChild(script);
+
+	
+			
+
+}
+
+function myMap() {
+	var myCenter = new google.maps.LatLng(lat,lng); 
+	var mapProp= {
+		center:myCenter,
+		zoom:5,
+	};
+	var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+	var marker = new google.maps.Marker({
+		position: myCenter,
+		animation: google.maps.Animation.BOUNCE
+	});
+	marker.setMap(map);
 }
