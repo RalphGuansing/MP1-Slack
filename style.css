@@ -94,7 +94,7 @@ p.postBody {
 	
 }
 
-#postButton,#photoButton  {
+#postButton,#photoButton,#albumButton {
 	background-color: #357AE8;
 	width: 40%;
 	margin:0 auto;	
@@ -102,7 +102,7 @@ p.postBody {
 	cursor: pointer;
 }
 
-#postButton p,#photoButton p{
+#postButton p,#photoButton p, #albumButton p{
 	text-align: center;
 	vertical-align: middle;
 	font-weight: bold;
@@ -110,7 +110,7 @@ p.postBody {
 	padding:40px;
 	
 }
-#postButton:hover, #photoButton:hover{
+#postButton:hover, #photoButton:hover,#albumButton:hover{
 	background-color: #357FFF;
 }
 
@@ -122,12 +122,30 @@ div header{
 
 }
 
+header.photoheader{
+	display: flex;
+	padding: 10px;
+	overflow: auto;
+	background-color: silver;
+	padding: 15px;
+	border-radius: 20px;
+	text-align: center;    
+}
+.phototext2{
+	text-align: center;
+}
+
 .album {
 	height:200px;
 	width: 200px;
+	display: flex;
 	background-color: white;
 	display: inline-block;
 	padding:20px;
+	padding-top: 50px;
+	padding-bottom:100px;
+	vertical-align:top;
+	
 }
 img.albumTN{
 	width:50px;
@@ -142,7 +160,6 @@ img.albumTN{
 	position: relative; 
 	display: flex;
 	
-	
 }
 
 .content-wrapper {
@@ -153,6 +170,13 @@ img.albumTN{
 	display: inline-block;
 	padding:20px;
 	padding-top: 50px;
+	text-align: center;
+
+}
+
+.content-wrapperphoto {
+	display: inline-block;
+	background-color: white;
 	text-align: center;
 
 }

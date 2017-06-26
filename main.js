@@ -4,15 +4,22 @@ var albumnum = 0;
 var photoData;
 function getAlbums()
 {
-	
 	var albumData;
 	var albumRequest = new XMLHttpRequest();
 	albumRequest.open('GET', 'https://jsonplaceholder.typicode.com/albums');
 	albumRequest.onload = function(){
 
 		albumData = JSON.parse(albumRequest.responseText);
+		albumData2 = JSON.parse(albumRequest.responseText);
 	};
 	albumRequest.send();
+	
+	var userRequest = new XMLHttpRequest();
+	userRequest.open('GET', 'https://jsonplaceholder.typicode.com/users');	
+	userRequest.onload = function(){	
+		userData2 = JSON.parse(userRequest.responseText);	
+	};
+	userRequest.send();
 	
 	var photoRequest = new XMLHttpRequest();
 	photoRequest.open('GET', 'https://jsonplaceholder.typicode.com/photos');
@@ -38,11 +45,13 @@ function albumfunc(num){
 	for(i = 0; i < photoData.length; i++){
 		
 		if(num == photoData[i].albumId && photocount != 16){
-			htmlString += "<img class="+'"'+"albumTN"+'"'+" src=" +'"'+ photoData[i].url +'"'+ "alt="+'"'+photoData[i].albumId+'"'+"/>";
+			htmlString += "<img class="+'"'+"albumTN"+'"'+" src=" +'"'+ photoData[i].thumbnailUrl +'"'+ "alt="+'"'+photoData[i].albumId+'"'+"/>";
 			photocount++;
 		}
-			
+		
 	}
+		htmlString+="<br>";
+		htmlString+= "<a class+"+'"'+"phototext"+'"'+">"+albumData2[num-1].title+"</a>";	
 	
 	albumdivHTML.insertAdjacentHTML('beforeend', htmlString);
 }
@@ -76,7 +85,7 @@ function renderAlbumPhotos(photosData,x){
 		if(x == photosData[i].albumId){
 			htmlString += "<div class="+'"'+"content-wrapper"+'"';
 			htmlString += " onclick="+ '"'+"photoClick("+photosData[i].id+")"+'"'+">";
-			htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+photosData[i].url+'"'+ ">";
+			htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+photosData[i].thumbnailUrl+'"'+ ">";
 			htmlString += "<a class="+ '"'+"phototext"+'"'+">"+photosData[i].title+"</a></div>";
 		}
 		
@@ -88,11 +97,18 @@ function renderAlbumPhotos(photosData,x){
 }
 
 
+
+var photoData3;
+var albumData3;
+var albumindex;
+var morealbumButton;
 function renderalbumHTML(photoData, albumData)
 {
 	
 	var htmlString = "";
 	albumnum += 1;
+	var photoData3 = photoData;
+	var albumData3 = albumData;
 	for(i = 0; i < 15; i++) {
 		var albumID;
 		var num = albumID + 1;
@@ -104,6 +120,9 @@ function renderalbumHTML(photoData, albumData)
 		if((i+1)%5 == 0)
 			htmlString += "<br>"
 	}
+	
+	htmlString += "<br><br><div id="+'"'+"albumButton"+'"'+"><p>I want more albums</p></div><br>";
+	
 	if(albumnum == 1){
 		imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
 	
@@ -111,7 +130,51 @@ function renderalbumHTML(photoData, albumData)
 			var num = ii+1;
 			albumfunc(num);
 		}
+		albumindex = 15;
 	}
+	
+	morealbumButton = document.getElementById("albumButton");
+	if(morealbumButton){
+		morealbumButton.addEventListener("click", moreAlbums);
+	}
+	
+}
+
+function moreAlbums(){
+	morealbumButton.remove();
+	var htmlString = "";
+	//albumnum += 1;
+	endindex = albumindex + 15;
+	if(endindex >99)
+		endindex = 100;
+	for(i = albumindex; i < endindex; i++) {
+		var albumID;
+		var num = albumID + 1;
+			
+		htmlString += "<div class="+'"'+"album"+'"'+" id="+'"album'+albumData2[i].id+'"'+" onclick="+ '"'+"albumClickfunc("+albumData2[i].id+")"+'"'+"></div>";
+		
+		//if((i+1)%6 == 0)
+		//	htmlString += "<br>"
+		if((i+1)%5 == 0)
+			htmlString += "<br>"
+	}	
+		morealbumButton.remove();
+		htmlString += "<div id="+'"'+"albumButton"+'"'+"><p>I want more albums</p></div>";
+		imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
+	
+		for(ii = albumindex; ii < endindex; ii++) {
+			var num = ii+1;
+			albumfunc(num);
+		}
+		albumindex += 15;
+	
+	morealbumButton = document.getElementById("albumButton");
+	if(morealbumButton){
+		morealbumButton.addEventListener("click", moreAlbums);
+	}
+	
+	if(albumindex > 99)
+		morealbumButton.remove();
 	
 }
 
@@ -227,6 +290,21 @@ function morePosts()
 
 var photoButton = document.getElementById("photo");
 photoButton.addEventListener("click", function() {
+	
+	var userRequest = new XMLHttpRequest();
+	userRequest.open('GET', 'https://jsonplaceholder.typicode.com/users');	
+	userRequest.onload = function(){	
+		userData2 = JSON.parse(userRequest.responseText);	
+	};
+	userRequest.send();
+	
+	var albumRequest = new XMLHttpRequest();
+	albumRequest.open('GET', 'https://jsonplaceholder.typicode.com/albums');
+	albumRequest.onload = function(){
+		albumData2 = JSON.parse(albumRequest.responseText);
+	};
+	albumRequest.send();
+	
 	var ourRequest = new XMLHttpRequest();
 	ourRequest.open('GET', 'https://jsonplaceholder.typicode.com/photos');
 	ourRequest.onload = function(){
@@ -249,16 +327,18 @@ var photonum = 0;
 var totalphotos;
 var endnum;
 var currentphotonum;
-var morephotoButton
+var morephotoButton;
+var photoData2;
 function renderphotoHTML(data){
 	var htmlString = "";
 	photonum+= 1;
 	totalphotos = data.length-1;
 	endnum = totalphotos - 15;
+	photoData2 = data;
 	for(i = totalphotos; i > endnum; i--) {	
 		htmlString += "<div class="+'"'+"content-wrapper"+'"';
 		htmlString += " onclick="+ '"'+"photoClick("+data[i].id+")"+'"'+">";
-		htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+data[i].url+'"'+ ">";
+		htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+data[i].thumbnailUrl+'"'+ ">";
 		htmlString += "<a class="+ '"'+"phototext"+'"'+">"+data[i].title+"</a></div>";
 		
 		
@@ -287,7 +367,7 @@ function morePhotos(){
 	for(i = currentphotonum; i > endnum; i--) {	
 		htmlString += "<div class="+'"'+"content-wrapper"+'"';
 		htmlString += " onclick="+ '"'+"photoClick("+photoData[i].id+")"+'"'+">";
-		htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+photoData[i].url+'"'+ ">";
+		htmlString += "<img class="+'"'+"resize"+'"'+" src="+'"'+photoData[i].thumbnailUrl+'"'+ ">";
 		htmlString += "<a class="+ '"'+"phototext"+'"'+">"+photoData[i].title+"</a></div>";
 		
 		
@@ -310,11 +390,37 @@ function morePhotos(){
 		morephotoButton.remove();
 	}
 }
-
+var albumData2;
+var userData2;
 function photoClick(id){
 	photonum = 0;
 	clearBox("centerdiv");
+	var htmlString ="";
+	var i = id -1;
+	
+	htmlString += "<div class="+'"'+"content-wrapperphoto"+'"';
+	htmlString += " onclick="+ '"'+"photoClick("+photoData[i].id+")"+'"'+">";
+	htmlString += "<img class="+'"'+"resize2"+'"'+" src="+'"'+photoData[i].url+'"'+ ">";
+	htmlString += "<header class="+'"'+"photoheader"+'"'+"><a class="+ '"'+"phototext2"+'"'+">"+photoData[i].title+"</a></header></div>";
+	
+	if(albumData2 != null)
+		for(n = 0; n < albumData2.length; n++)
+			if(photoData[i].albumId == albumData2[n].id){
+				htmlString += "<p><a>Album: </a>" + albumData2[n].title + "<p>";
+				j = 0;
+				while( j < userData2.length){
+					if(albumData2[n].userId == userData2[j].id)
+						htmlString += "<p><a>By: </a>" + userData2[j].name + "<p>";
+					j++;
+				}
+			}	
+			
+	imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
+	
+	
+	
 }
+
 
 
 var userButton = document.getElementById("users");
