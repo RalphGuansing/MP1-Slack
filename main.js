@@ -406,11 +406,11 @@ function photoClick(id){
 	if(albumData2 != null)
 		for(n = 0; n < albumData2.length; n++)
 			if(photoData[i].albumId == albumData2[n].id){
-				htmlString += "<p><a>Album: </a>" + albumData2[n].title + "<p>";
+				htmlString += "<p id="+'"'+"clickable"+'"'+" onclick="+ '"'+"albumClickfunc("+albumData2[n].id+")"+'"'+"><a>Album: </a>" + albumData2[n].title + "<p>";
 				j = 0;
 				while( j < userData2.length){
 					if(albumData2[n].userId == userData2[j].id)
-						htmlString += "<p><a>By: </a>" + userData2[j].name + "<p>";
+						htmlString += "<p "+"id="+'"'+"clickable"+'"'+" onclick="+ '"'+"userfunc("+(j+1)+")"+'"'+"><a>By: </a>" + userData2[j].name + "<p>";
 					j++;
 				}
 			}	

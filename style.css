@@ -94,6 +94,13 @@ p.postBody {
 	
 }
 
+#clickable {
+	cursor: pointer;
+}
+#clickable:hover {
+	text-decoration: underline;
+}
+
 #postButton,#photoButton,#albumButton {
 	background-color: #357AE8;
 	width: 40%;
