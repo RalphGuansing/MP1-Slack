@@ -8,16 +8,25 @@ function getAlbums()
 	var albumRequest = new XMLHttpRequest();
 	albumRequest.open('GET', 'https://jsonplaceholder.typicode.com/albums');
 	albumRequest.onload = function(){
-
-		albumData = JSON.parse(albumRequest.responseText);
-		albumData2 = JSON.parse(albumRequest.responseText);
+		
+		if(albumRequest.status >= 200 && albumRequest.status < 400){
+			albumData = JSON.parse(albumRequest.responseText);
+			albumData2 = JSON.parse(albumRequest.responseText);
+		}else {
+			console.log("Something went wrong D:");
+		}
 	};
 	albumRequest.send();
 	
 	var userRequest = new XMLHttpRequest();
 	userRequest.open('GET', 'https://jsonplaceholder.typicode.com/users');	
 	userRequest.onload = function(){	
-		userData2 = JSON.parse(userRequest.responseText);	
+		if(userRequest.status >= 200 && userRequest.status < 400){
+			userData2 = JSON.parse(userRequest.responseText);
+		}else {
+			console.log("Something went wrong D:");
+		}
+			
 	};
 	userRequest.send();
 	
@@ -32,8 +41,13 @@ function getAlbums()
 		photonum = 0;
 		postnum = 0;
 		
-		photoData = JSON.parse(photoRequest.responseText);
-		renderalbumHTML(photoData, albumData);
+		if(photoRequest.status >= 200 && photoRequest.status < 400){
+			photoData = JSON.parse(photoRequest.responseText);
+			renderalbumHTML(photoData, albumData);
+		}else {
+			console.log("Something went wrong D:");
+		}
+		
 		
 	};
 	photoRequest.send();
@@ -58,23 +72,27 @@ function albumfunc(num){
 
 
 function albumClickfunc(num){
-	//var x = document.getElementById("album"+num);
 	var ii = num;
-	//console.log(ii); 
-	//x.addEventListener("click", function(){
 		clearBox("centerdiv");
 		var photosRequest = new XMLHttpRequest();
 		photosRequest.open('GET', 'https://jsonplaceholder.typicode.com/photos');
 		
 		photosRequest.onload = function(){
-
-			var photosData = JSON.parse(photosRequest.responseText);
-			renderAlbumPhotos(photosData,ii);
+			
+			if(photosRequest.status >= 200 && photosRequest.status < 400){
+				var photosData = JSON.parse(photosRequest.responseText);
+				renderAlbumPhotos(photosData,ii);
+			} else {
+				console.log("Something went wrong D:");
+			}
 			
 		};
 		
+		photosRequest.onerror = function(){
+			console.log("Connection Error");
+		};
+		
 		photosRequest.send();
-	//});
 }
 
 function renderAlbumPhotos(photosData,x){
@@ -208,8 +226,13 @@ function getPosts()
 		photonum = 0;
 		albumnum= 0;
 		
-		var userData = JSON.parse(ourRequest.responseText);
-		renderpostHTML(userData, mainuserData);
+		if(ourRequest.status >= 200 && ourRequest.status < 400){
+			var userData = JSON.parse(ourRequest.responseText);
+			renderpostHTML(userData, mainuserData);
+		}else {
+			console.log("Something went wrong D:");
+		}
+		
 		
 	};
 	ourRequest.send();
