@@ -3,14 +3,6 @@ var imgdivHTML = document.getElementById("imgdiv");
 var albumnum = 0;
 var photoData;
 
-
-
-
-
-
-
-
-
 function getAlbums()
 {
 	var albumData;
@@ -61,22 +53,26 @@ function getAlbums()
 	};
 	photoRequest.send();
 }
-function albumfunc(num){
-	var htmlString = "";
+function albumfunc(num,albumData){
+	var htmlString2 = "";
 	var albumdivHTML = document.getElementById("album"+num);
 	var photocount=0;
-	for(i = 0; i < photoData.length; i++){
+	$.ajax({url: "https://jsonplaceholder.typicode.com/photos", success: function(result){
+		photoData = result;
+		//alert(photoData[0].url);
 		
-		if(num == photoData[i].albumId && photocount != 16){
-			htmlString += "<img class="+'"'+"albumTN"+'"'+" src=" +'"'+ photoData[i].thumbnailUrl +'"'+ "alt="+'"'+photoData[i].albumId+'"'+"/>";
-			photocount++;
+		for(i = 0; i < photoData.length; i++){		
+			if(num == photoData[i].albumId && photocount != 16){
+				htmlString2 += "<img class="+'"'+"albumTN"+'"'+" src=" +'"'+ photoData[i].thumbnailUrl +'"'+ "alt="+'"'+photoData[i].albumId+'"'+"/>";
+				photocount++;
+			}	
 		}
-		
-	}
-		htmlString+="<br>";
-		htmlString+= "<a class+"+'"'+"phototext"+'"'+">"+albumData2[num-1].title+"</a>";	
+		htmlString2+="<br>";
+		htmlString2+= "<a class+"+'"'+"phototext"+'"'+">"+albumData[num-1].title+"</a>";	
+		albumdivHTML.insertAdjacentHTML('beforeend', htmlString2);
+	}});
 	
-	albumdivHTML.insertAdjacentHTML('beforeend', htmlString);
+		
 }
 
 
@@ -123,10 +119,6 @@ function renderAlbumPhotos(photosData,x){
 	
 }
 
-
-
-var photoData3;
-var albumData3;
 var albumindex;
 var morealbumButton;
 function renderalbumHTML(photoData, albumData)
@@ -134,8 +126,6 @@ function renderalbumHTML(photoData, albumData)
 	
 	var htmlString = "";
 	albumnum += 1;
-	var photoData3 = photoData;
-	var albumData3 = albumData;
 	for(i = 0; i < 15; i++) {
 		var albumID;
 		var num = albumID + 1;
@@ -155,7 +145,7 @@ function renderalbumHTML(photoData, albumData)
 	
 		for(ii = 0; ii < 15; ii++) {
 			var num = ii+1;
-			albumfunc(num);
+			albumfunc(num,albumData);
 		}
 		albumindex = 15;
 	}
@@ -191,7 +181,7 @@ function moreAlbums(){
 	
 		for(ii = albumindex; ii < endindex; ii++) {
 			var num = ii+1;
-			albumfunc(num);
+			albumfunc(num,albumData2);
 		}
 		albumindex += 15;
 	
@@ -496,19 +486,46 @@ function userfunc(num) {
 		postnum = 0;
 		photonum = 0;
 		albumnum = 0;
-		var ourRequest = new XMLHttpRequest();
-		ourRequest.open('GET', 'https://jsonplaceholder.typicode.com/users');
+	
+	var userRequest = new XMLHttpRequest();
+	userRequest.open('GET', 'https://jsonplaceholder.typicode.com/users');
 		
-		ourRequest.onload = function(){
-		
+	userRequest.onload = function(){	
+		var userData = JSON.parse(userRequest.responseText);
+		renderProfile(userData,i);
+			
+	};
+	userRequest.send();
+}
 
+function renderAlbums(userID){
+	var albumdivHTML = document.getElementById("albumdiv");
+	var htmlString = "<div id="+'"'+"innerdiv"+'"'+">";
+	albumnum += 1;
+	var albumData;
+   
+        $.ajax({url: "https://jsonplaceholder.typicode.com/albums", success: function(result){
+          albumData = result;
+        
+
+			for(i = 0; i < albumData.length; i++) {
+				var albumID;
+				var num = albumID + 1;
+				
+				if(userID == albumData[i].userId)
+				htmlString += "<div class="+'"'+"album"+'"'+" id="+'"album'+albumData[i].id+'"'+" onclick="+ '"'+"albumClickfunc("+albumData[i].id+")"+'"'+"></div>";
+			}
+			htmlString += "</div>";
 			
-			var userData = JSON.parse(ourRequest.responseText);
-			renderProfile(userData,i);
+			albumdivHTML.insertAdjacentHTML('beforeend', htmlString);
 			
-		};
-		
-		ourRequest.send();
+			for(ii = 0; ii < albumData.length; ii++) {
+					var num = ii+1;
+					if(userID == albumData[ii].userId)
+						albumfunc(num,albumData);
+			}
+	
+	}});
 }
 
 
@@ -522,17 +539,18 @@ function renderProfile(data,i){
 	htmlString += "<div id="+'"'+"wrap"+'"'+"><div id="+'"'+"profileInfo"+'"'+">"+"<h1>" + data[index].name +"</h1>"+data[index].username + "<i>("+ data[index].email+")</i><p>ID: "+ data[index].id +"</p><br><h2>Address</h2><p>Street: "+data[index].address.street +"<br>Suite: "+data[index].address.suite +"<br>City: "+data[index].address.city +"<br>Zipcode: "+data[index].address.zipcode +"<br>"+ "</p>";
 	htmlString+= "<h2>Contact:</h2><p>Phone: " + data[index].phone +"<br>Website: "+ data[index].website + "<br>";
 	htmlString+= "Company: <strong>"+data[index].company.name + "</strong><br><i>" + data[index].company.catchPhrase + "</i><br>("+data[index].company.bs+")</p></div>";
-	htmlString+= "<div id="+'"'+"albumdiv"+'"'+"></div>"
-	htmlString += "<div id="+'"'+"googleMap"+'"'+"style="+'"'+"width:400px;height:400px;"+'"'+"></div></div>";
-	
+	htmlString+= "<div id="+'"'+"albumdiv"+'"'+"></div></div>"
+	htmlString += "<br><div id="+'"'+"googleMap"+'"'+"style="+'"'+"width:300px;height:300px;"+'"'+"></div>";
 	divHTML.insertAdjacentHTML('beforeend', htmlString);
+	renderAlbums(data[index].id);
+	
 	lat = data[index].address.geo.lat;
 	lng = data[index].address.geo.lng;
 	//alert("lat: "+lat+"  lng: "+lng)
 	
-		script = document.createElement("script");
-		script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyApcfxWkE3UtK7Wb5vAFTTtbk19zxWlutw&callback=myMap"; 
-		document.getElementsByTagName("head")[0].appendChild(script);
+	script = document.createElement("script");
+	script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyApcfxWkE3UtK7Wb5vAFTTtbk19zxWlutw&callback=myMap"; 
+	document.getElementsByTagName("head")[0].appendChild(script);
 }
 
 function myMap() {

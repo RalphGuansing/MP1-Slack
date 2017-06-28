@@ -161,9 +161,9 @@ img.albumTN{
 
 #profileInfo {
 	padding-left: 100px;
-	
 	height: 500px;
 	width: 300px;
+	padding-right:30px;
 	
 }
 .phototext{
@@ -193,9 +193,21 @@ img.albumTN{
 
 #googleMap{
 	left:100px;
+	height:400px;
+	width:400px;
 }
 
 #wrap {
 	display:flex;
+}
+
+#albumdiv{
+	height: 380px;
+	width: 730px;
+	overflow-x: auto;
+}
+
+#innerdiv{
+	width: 2400px;
 }
 
