@@ -2,6 +2,15 @@ var divHTML = document.getElementById("centerdiv");
 var imgdivHTML = document.getElementById("imgdiv");
 var albumnum = 0;
 var photoData;
+
+
+
+
+
+
+
+
+
 function getAlbums()
 {
 	var albumData;
@@ -500,8 +509,9 @@ function userfunc(num) {
 		};
 		
 		ourRequest.send();
-	//});
 }
+
+
 
 var lat;
 var lng;
@@ -509,11 +519,13 @@ var script;
 function renderProfile(data,i){
 	var htmlString = "";
 	var index = i-1;
-	htmlString += "<div id="+'"'+"profileInfo"+'"'+">"+"<h1>" + data[index].name +"</h1>"+data[index].username+"<p><a>ID: "+ data[index].id +"<br>Street: "+data[index].address.street +"<br>Suite: "+data[index].address.suite +"<br>City: "+data[index].address.city +"<br>Zipcode: "+data[index].address.zipcode +"<br>"+ "</a></p></div>";
-	htmlString += "<div id="+'"'+"googleMap"+'"'+"style="+'"'+"width:400px;height:400px;"+'"'+"></div>";
+	htmlString += "<div id="+'"'+"wrap"+'"'+"><div id="+'"'+"profileInfo"+'"'+">"+"<h1>" + data[index].name +"</h1>"+data[index].username + "<i>("+ data[index].email+")</i><p>ID: "+ data[index].id +"</p><br><h2>Address</h2><p>Street: "+data[index].address.street +"<br>Suite: "+data[index].address.suite +"<br>City: "+data[index].address.city +"<br>Zipcode: "+data[index].address.zipcode +"<br>"+ "</p>";
+	htmlString+= "<h2>Contact:</h2><p>Phone: " + data[index].phone +"<br>Website: "+ data[index].website + "<br>";
+	htmlString+= "Company: <strong>"+data[index].company.name + "</strong><br><i>" + data[index].company.catchPhrase + "</i><br>("+data[index].company.bs+")</p></div>";
+	htmlString+= "<div id="+'"'+"albumdiv"+'"'+"></div>"
+	htmlString += "<div id="+'"'+"googleMap"+'"'+"style="+'"'+"width:400px;height:400px;"+'"'+"></div></div>";
 	
 	divHTML.insertAdjacentHTML('beforeend', htmlString);
-	
 	lat = data[index].address.geo.lat;
 	lng = data[index].address.geo.lng;
 	//alert("lat: "+lat+"  lng: "+lng)
@@ -521,10 +533,6 @@ function renderProfile(data,i){
 		script = document.createElement("script");
 		script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyApcfxWkE3UtK7Wb5vAFTTtbk19zxWlutw&callback=myMap"; 
 		document.getElementsByTagName("head")[0].appendChild(script);
-
-	
-			
-
 }
 
 function myMap() {
