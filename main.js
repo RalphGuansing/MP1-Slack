@@ -209,9 +209,8 @@ function getPosts()
 	var mainuserData;
 	var usersRequest = new XMLHttpRequest();
 	usersRequest.open('GET', 'https://jsonplaceholder.typicode.com/users');
-	usersRequest.onload = function(){
-
-		mainuserData = JSON.parse(usersRequest.responseText);
+	usersRequest.onload = function(){	
+			mainuserData = JSON.parse(usersRequest.responseText);
 	};
 	usersRequest.send();
 	
@@ -226,14 +225,15 @@ function getPosts()
 		albumnum= 0;
 		
 		if(ourRequest.status >= 200 && ourRequest.status < 400){
-			var userData = JSON.parse(ourRequest.responseText);
-			renderpostHTML(userData, mainuserData);
+			var postsJson = JSON.parse(ourRequest.responseText);
+			renderpostHTML(postsJson, mainuserData);
 		}else {
 			console.log("Something went wrong D:");
 		}
-		
-		
+	
 	};
+	
+	
 	ourRequest.send();
 }
 
@@ -251,33 +251,39 @@ var postuserData;
 var morepostButton;
 function renderpostHTML(data, userData)
 {
-	var htmlString = "";
-	postnum+= 1;
-	postData = data;
-	postuserData = userData;
-	var totalposts = data.length-1
-	for(i = totalposts; i >= totalposts-10; i--) {
-		var userid;
-		for(y = 0; y < userData.length; y++){
-			if(data[i].userId == userData[y].id)
-				userid = y;
-			var num = userid +1;
+	
+	$.ajax({url: "https://jsonplaceholder.typicode.com/users", success: function(result){
+       userData = result;
+	   
+	   var htmlString = "";
+		postnum+= 1;
+		postData = data;
+		postuserData = userData;
+		var totalposts = data.length-1
+		for(i = totalposts; i >= totalposts-10; i--) {
+			var userid;
+			for(y = 0; y < userData.length; y++){
+				if(data[i].userId == userData[y].id)
+					userid = y;
+				var num = userid +1;
+			}
+				
+			htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+num+'"'+ " onclick="+ '"'+"userfunc("+num+")"+'"'+ ">" + userData[userid].name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + data[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + data[i].body+"</p></div><br>";
+			currentpostnum = i-1;
+			postCeiling = totalposts-10;
 		}
-			
-		htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+num+'"'+ " onclick="+ '"'+"userfunc("+num+")"+'"'+ ">" + userData[userid].name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + data[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + data[i].body+"</p></div><br>";
-		currentpostnum = i-1;
-		postCeiling = totalposts-10;
-	}
+		
+		htmlString += "<div id="+'"'+"postButton"+'"'+"><p>I want more posts</p></div><br>";
+		
+		if(postnum == 1)
+			divHTML.insertAdjacentHTML('beforeend', htmlString);
+		
+		morepostButton = document.getElementById("postButton");
+		if(morepostButton){
+			morepostButton.addEventListener("click", morePosts);
+		}
+	}});
 	
-	htmlString += "<div id="+'"'+"postButton"+'"'+"><p>I want more posts</p></div><br>";
-	
-	if(postnum == 1)
-		divHTML.insertAdjacentHTML('beforeend', htmlString);
-	
-	morepostButton = document.getElementById("postButton");
-	if(morepostButton){
-		morepostButton.addEventListener("click", morePosts);
-	}
 }
 
 function morePosts() 
@@ -425,22 +431,26 @@ function photoClick(id){
 	htmlString += "<img class="+'"'+"resize2"+'"'+" src="+'"'+photoData[i].url+'"'+ ">";
 	htmlString += "<header class="+'"'+"photoheader"+'"'+"><a class="+ '"'+"phototext2"+'"'+">"+photoData[i].title+"</a></header></div>";
 	
-	if(albumData2 != null)
-		for(n = 0; n < albumData2.length; n++)
-			if(photoData[i].albumId == albumData2[n].id){
-				htmlString += "<p id="+'"'+"clickable"+'"'+" onclick="+ '"'+"albumClickfunc("+albumData2[n].id+")"+'"'+"><a>Album: </a>" + albumData2[n].title + "<p>";
-				j = 0;
-				while( j < userData2.length){
-					if(albumData2[n].userId == userData2[j].id)
-						htmlString += "<p "+"id="+'"'+"clickable"+'"'+" onclick="+ '"'+"userfunc("+(j+1)+")"+'"'+"><a>By: </a>" + userData2[j].name + "<p>";
-					j++;
-				}
-			}	
-			
-	imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
-	
-	
-	
+	$.ajax({url: "https://jsonplaceholder.typicode.com/albums", success: function(result1){
+		var albumData = result1;
+		$.ajax({url: "https://jsonplaceholder.typicode.com/users", success: function(result2){
+			var usernameData = result2;
+			if(albumData != null)
+				for(n = 0; n < albumData.length; n++)
+					if(photoData[i].albumId == albumData[n].id){
+						htmlString += "<p id="+'"'+"clickable"+'"'+" onclick="+ '"'+"albumClickfunc("+albumData[n].id+")"+'"'+"><a>Album: </a>" + albumData[n].title + "<p>";
+						j = 0;
+						while( j < usernameData.length){
+							if(albumData[n].userId == usernameData[j].id)
+								htmlString += "<p "+"id="+'"'+"clickable"+'"'+" onclick="+ '"'+"userfunc("+(j+1)+")"+'"'+"><a>By: </a>" + usernameData[j].name + "<p>";
+							j++;
+						}
+					}	
+					
+			imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
+		}});
+	}});
+
 }
 
 
@@ -507,8 +517,8 @@ function renderAlbums(userID){
         $.ajax({url: "https://jsonplaceholder.typicode.com/albums", success: function(result){
           albumData = result;
         
-
-			for(i = 0; i < albumData.length; i++) {
+			var startindex = albumData.length-1;
+			for(i = startindex; i >=0 ; i--) {
 				var albumID;
 				var num = albumID + 1;
 				
@@ -532,8 +542,9 @@ function renderPosts(userID,name){
 	$.ajax({url: "https://jsonplaceholder.typicode.com/posts", success: function(result){
         var userPosts = result;
         var htmlString = "";
-		
-		for(i = 0; i < userPosts.length; i++) {	
+
+		var startindex = userPosts.length-1;
+		for(i = startindex; i >=0 ; i--) {	
 			if(userPosts[i].userId == userID)
 				htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+userID+'"'+ " onclick="+ '"'+"userfunc("+userID+")"+'"'+ ">" + name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + userPosts[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + userPosts[i].body+"</p></div><br>";
 		}
