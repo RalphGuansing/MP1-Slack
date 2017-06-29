@@ -94,6 +94,19 @@ p.postBody {
 	
 }
 
+.users{
+	height:30px;
+	width:190px;
+    background-color: powderblue;
+	vertical-align:middle;
+	text-align:center;
+	padding-bottom: 20px;
+	margin:0 auto;
+	border-size:2px;
+	border-style:solid;
+	border-color:black;
+}
+
 #clickable {
 	cursor: pointer;
 }

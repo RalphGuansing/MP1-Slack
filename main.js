@@ -125,7 +125,7 @@ function renderalbumHTML(photoData, albumData)
 {
 	
 	var htmlString = "";
-	albumnum += 1;
+	albumnum = 1;
 	for(i = 0; i < 15; i++) {
 		var albumID;
 		var num = albumID + 1;
@@ -470,10 +470,10 @@ function renderusersHTML(data){
 	usernum+= 1;
 	for(i = 0; i < data.length; i++) {
 		var num = i+1;
-		htmlString += "<p><a id="+'"'+ "userbutt"+num+'"'+ " onclick="+ '"'+"userfunc("+num+")"+'"'+ ">" + data[i].name + "</a></p>";
+		htmlString += "<div class="+'"'+"users"+'"'+"><p><a id="+'"'+ "userbutt"+num+'"'+ " onclick="+ '"'+"userfunc("+num+")"+'"'+ ">" + data[i].name + "</a></p></div>";
 	}
 	if(usernum == 1)
-		divHTML.insertAdjacentHTML('beforeend', htmlString);
+		imgdivHTML.insertAdjacentHTML('beforeend', htmlString);
 }
 
 function userfunc(num) {
@@ -501,7 +501,7 @@ function userfunc(num) {
 function renderAlbums(userID){
 	var albumdivHTML = document.getElementById("albumdiv");
 	var htmlString = "<div id="+'"'+"innerdiv"+'"'+">";
-	albumnum += 1;
+	//albumnum = 1;
 	var albumData;
    
         $.ajax({url: "https://jsonplaceholder.typicode.com/albums", success: function(result){
