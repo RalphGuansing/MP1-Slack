@@ -185,15 +185,15 @@ img.albumTN{
 	
 }
 
-.content-wrapper {
-	height:200px;
-	width: 200px;
-	display: flex;
-	background-color: white;
-	display: inline-block;
-	padding:20px;
-	padding-top: 50px;
-	text-align: center;
+.content-wrapper {	
+	height: 200px;
+    width: 200px;
+    display: flex;
+    background-color: white;
+    display: inline-block;
+    padding: 20px;
+    padding-top: 50px;
+    text-align: center;
 
 }
 
@@ -216,17 +216,43 @@ img.albumTN{
 
 #albumdiv{
 	height: 380px;
-	width: 730px;
+	width: 1000px;
 	overflow-x: auto;
 }
 
 #innerdiv{
-	width: 2400px;
 }
 
 #profilePosts{
 	height: 380px;
 	width: 1000px;
 	overflow: auto;
+}
+
+#shawarma{
+	display: inline-block;
+	padding:20px;
+	padding-top: 80px;
+}
+
+#albumprofilebutton {
+	background-color: #357AE8;
+	width: 160px;
+	height: 160px;
+	border-radius: 10px;
+	cursor: pointer;
+	display: inline-block;
+}
+
+#albumprofilebutton p{
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+	color:white;
+	padding:40px;
+	
+}
+#albumprofilebutton:hover{
+	background-color: #357FFF;
 }
 

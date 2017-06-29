@@ -516,23 +516,82 @@ function renderAlbums(userID){
    
         $.ajax({url: "https://jsonplaceholder.typicode.com/albums", success: function(result){
           albumData = result;
-        
 			var startindex = albumData.length-1;
+			var count = 0;
 			for(i = startindex; i >=0 ; i--) {
 				var albumID;
 				var num = albumID + 1;
 				
-				if(userID == albumData[i].userId)
-				htmlString += "<div class="+'"'+"album"+'"'+" id="+'"album'+albumData[i].id+'"'+" onclick="+ '"'+"albumClickfunc("+albumData[i].id+")"+'"'+"></div>";
+				if(userID == albumData[i].userId && count < 3){
+					htmlString += "<div class="+'"'+"album"+'"'+" id="+'"album'+albumData[i].id+'"'+" onclick="+ '"'+"albumClickfunc("+albumData[i].id+")"+'"'+"></div>";
+					count++;
+				}
+				
 			}
-			htmlString += "</div>";
+			htmlString += "<div id="+'"'+"shawarma"+'"'+"onclick="+'"'+"showallalbums("+userID+")"+'"'+"><div id="+'"'+"albumprofilebutton"+'"'+"><p>Show all albums</p></div>";
+			htmlString += "</div></div>";
+			
 			
 			albumdivHTML.insertAdjacentHTML('beforeend', htmlString);
 			
-			for(ii = 0; ii < albumData.length; ii++) {
-					var num = ii+1;
-					if(userID == albumData[ii].userId)
-						albumfunc(num,albumData);
+			count = 0;
+			
+			startindex = albumData.length-1
+			for(ii = startindex; ii >=0; ii--) {
+				var num = ii+1;					
+				if(userID == albumData[ii].userId && count < 3){
+					albumfunc(albumData[ii].id,albumData);
+					count++;
+				}
+			}
+	
+		}});
+}
+
+function showallalbums(userID){
+	var innerdivHTML = document.getElementById("innerdiv");
+	var albumButtonprofile = document.getElementById("shawarma");
+	albumButtonprofile.remove();
+	var albumData;
+	
+	document.getElementById('innerdiv').setAttribute("style","width:2400px");
+	
+	var htmlString = "";
+   
+        $.ajax({url: "https://jsonplaceholder.typicode.com/albums", success: function(result){
+          albumData = result;
+			var startindex = albumData.length-1;
+			var count = 0;
+			for(i = startindex; i >=0 ; i--) {
+				var albumID;
+				var num = albumID + 1;
+				
+				if(userID == albumData[i].userId && count >= 3){
+					htmlString += "<div class="+'"'+"album"+'"'+" id="+'"album'+albumData[i].id+'"'+" onclick="+ '"'+"albumClickfunc("+albumData[i].id+")"+'"'+"></div>";
+					count++;
+				}
+				else if(userID == albumData[i].userId){
+					count++;
+				}
+				
+				
+			}
+			
+			
+			innerdivHTML.insertAdjacentHTML('beforeend', htmlString);
+			
+			count = 0;
+			
+			startindex = albumData.length-1
+			for(ii = startindex; ii >=0; ii--) {
+				var num = ii+1;					
+				if(userID == albumData[ii].userId && count >= 3){
+					albumfunc(albumData[ii].id,albumData);
+					count++;
+				}
+				else if(userID == albumData[ii].userId){
+					count++;
+				}
 			}
 	
 		}});
@@ -544,15 +603,50 @@ function renderPosts(userID,name){
         var htmlString = "";
 
 		var startindex = userPosts.length-1;
-		for(i = startindex; i >=0 ; i--) {	
-			if(userPosts[i].userId == userID)
+		var count = 0;
+		for(i = startindex; i >= 0; i--) {	
+			if(userPosts[i].userId == userID && count < 3){
 				htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+userID+'"'+ " onclick="+ '"'+"userfunc("+userID+")"+'"'+ ">" + name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + userPosts[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + userPosts[i].body+"</p></div><br>";
+				count++;
+			}
 		}
+		
+		htmlString += "<div id="+'"'+"postButton"+'"'+"onclick="+'"'+"showallposts("+userID+",'"+name+"')"+'"'+"><p>Show all posts</p></div><br>";
 		
 		var profilePostsHTML = document.getElementById("profilePosts");
 		profilePostsHTML.insertAdjacentHTML('beforeend', htmlString);
-		
+		 
 	}});
+}
+
+function showallposts(userID,name){
+	var profilePostsHTML = document.getElementById("profilePosts");
+	var postButtonprofile = document.getElementById("postButton");
+	postButtonprofile.remove();
+	var albumData;
+	
+	//document.getElementById('innerdiv').setAttribute("style","width:2400px");
+	
+	var htmlString = "";
+   
+        $.ajax({url: "https://jsonplaceholder.typicode.com/posts", success: function(result){
+			var userPosts = result;
+			var htmlString = "";
+
+			var startindex = userPosts.length-1;
+			var count = 0;
+			for(i = startindex; i >= 0; i--) {	
+				if(userPosts[i].userId == userID && count >= 3){
+					htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+userID+'"'+ " onclick="+ '"'+"userfunc("+userID+")"+'"'+ ">" + name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + userPosts[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + userPosts[i].body+"</p></div><br>";
+					
+				}
+				else if(userPosts[i].userId == userID){
+					count++;
+				}
+			}
+			profilePostsHTML.insertAdjacentHTML('beforeend', htmlString);
+	
+		}});
 }
 
 var lat;
