@@ -211,3 +211,9 @@ img.albumTN{
 	width: 2400px;
 }
 
+#profilePosts{
+	height: 380px;
+	width: 1000px;
+	overflow: auto;
+}
+

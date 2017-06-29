@@ -525,10 +525,24 @@ function renderAlbums(userID){
 						albumfunc(num,albumData);
 			}
 	
-	}});
+		}});
 }
 
-
+function renderPosts(userID,name){
+	$.ajax({url: "https://jsonplaceholder.typicode.com/posts", success: function(result){
+        var userPosts = result;
+        var htmlString = "";
+		
+		for(i = 0; i < userPosts.length; i++) {	
+			if(userPosts[i].userId == userID)
+				htmlString += "<div class="+'"'+"post"+'"'+"><header><a id="+'"'+ "userbutt"+userID+'"'+ " onclick="+ '"'+"userfunc("+userID+")"+'"'+ ">" + name + "</header></a><p class = " + '"'+"postTitle"+'"'+ ">" + userPosts[i].title + "</p><p class = " + '"'+"postBody"+'"'+ ">" + userPosts[i].body+"</p></div><br>";
+		}
+		
+		var profilePostsHTML = document.getElementById("profilePosts");
+		profilePostsHTML.insertAdjacentHTML('beforeend', htmlString);
+		
+	}});
+}
 
 var lat;
 var lng;
@@ -540,9 +554,11 @@ function renderProfile(data,i){
 	htmlString+= "<h2>Contact:</h2><p>Phone: " + data[index].phone +"<br>Website: "+ data[index].website + "<br>";
 	htmlString+= "Company: <strong>"+data[index].company.name + "</strong><br><i>" + data[index].company.catchPhrase + "</i><br>("+data[index].company.bs+")</p></div>";
 	htmlString+= "<div id="+'"'+"albumdiv"+'"'+"></div></div>"
-	htmlString += "<br><div id="+'"'+"googleMap"+'"'+"style="+'"'+"width:300px;height:300px;"+'"'+"></div>";
+	htmlString += "<br><div id="+'"'+"wrap"+'"'+"><div id="+'"'+"googleMap"+'"'+"style="+'"'+"width:300px;height:300px;"+'"'+"></div>";
+	htmlString += "<div id="+'"'+"profilePosts"+'"'+"></div></div>";
 	divHTML.insertAdjacentHTML('beforeend', htmlString);
 	renderAlbums(data[index].id);
+	renderPosts(data[index].id,data[index].name);
 	
 	lat = data[index].address.geo.lat;
 	lng = data[index].address.geo.lng;
